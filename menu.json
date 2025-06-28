@@ -1,0 +1,101 @@
+{
+  "hotels": {
+    "Grand_Palace_Hotel": {
+      "location": "Downtown City Center",
+      "menu": {
+        "Appetizers": {
+          "Bruschetta": 12.99,
+          "Spring Rolls": 8.99,
+          "Calamari": 15.99,
+          "Spinach Artichoke Dip": 11.99
+        },
+        "Main Course": {
+          "Grilled Salmon": 28.99,
+          "Beef Tenderloin": 32.99,
+          "Chicken Marsala": 24.99,
+          "Vegetable Pasta": 18.99,
+          "Lobster Thermidor": 45.99
+        },
+        "Desserts": {
+          "Chocolate Lava Cake": 9.99,
+          "Tiramisu": 8.99,
+          "New York Cheesecake": 7.99,
+          "Crème Brûlée": 10.99
+        },
+        "Beverages": {
+          "Fresh Fruit Juice": 4.99,
+          "Iced Tea": 3.99,
+          "Coffee": 3.49,
+          "Soft Drinks": 2.99,
+          "Wine (Glass)": 8.99
+        }
+      }
+    },
+    "Seaside_Resort": {
+      "location": "Beachfront Paradise",
+      "menu": {
+        "Starters": {
+          "Coconut Shrimp": 16.99,
+          "Tuna Tartare": 19.99,
+          "Crab Cakes": 22.99
+        },
+        "Entrees": {
+          "Mahi Mahi": 26.99,
+          "Filet Mignon": 38.99,
+          "Shrimp Scampi": 29.99,
+          "Vegetarian Curry": 20.99
+        },
+        "Sweet Endings": {
+          "Key Lime Pie": 8.99,
+          "Banana Foster": 12.99,
+          "Ice Cream Selection": 6.99
+        },
+        "Drinks": {
+          "Tropical Smoothie": 6.99,
+          "Cocktails": 11.99,
+          "Beer": 5.99,
+          "Mineral Water": 2.99
+        }
+      }
+    },
+    "Shree_Hari_Pure_Veg": {
+      "location": "Parvati, Pune",
+      "menu": {
+        "Pav Bhaji": {
+          "Amul Pav Bhaji": 120,
+          "Jain Bhaji": 114,
+          "Jain Pav Bhaji": 132,
+          "Pav (2pcs)": 24,
+          "Cheese Pav Bhaji": 156,
+          "Palak Pav Bhaji": 144,
+          "Paneer Pav Bhaji": 162,
+          "Khada Pav Bhaji": 144,
+          "Only Bhaji": 96,
+          "Khada Bhaji": 120,
+          "Masala Pav (2pcs)": 96,
+          "Masala Pav Bhaji": 156,
+          "Cheese Masala Pav": 108
+        },
+        "Papad": {
+          "Masala Papad": 48,
+          "Fried Papad": 36,
+          "Roasted Papad": 30,
+          "Roasted Masala Papad": 48
+        },
+        "Snacks": {
+          "Shira": 60,
+          "Paneer Pakoda": 156,
+          "Upma": 48,
+          "Mix Pakoda": 132,
+          "Steam Idli": 84,
+          "Finger Chips": 108,
+          "Butter Idli": 96,
+          "Onion Pakoda": 120,
+          "Medu Wada Sambhar": 96,
+          "Idli Wada Sambhar": 96,
+          "Dahi Wada": 96
+        }
+      }
+    }
+  }
+} 
