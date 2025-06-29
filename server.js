@@ -120,9 +120,29 @@ app.get('/health', (req, res) => {
 
 // Serve React app in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
+  const buildPath = path.join(__dirname, 'client/build');
+  const indexPath = path.join(buildPath, 'index.html');
   
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
+  // Check if build directory exists
+  const fs = require('fs');
+  if (fs.existsSync(buildPath)) {
+    console.log('✅ React build directory found');
+    app.use(express.static(buildPath));
+    
+    app.get('*', (req, res) => {
+      res.sendFile(indexPath);
+    });
+  } else {
+    console.error('❌ React build directory not found at:', buildPath);
+    console.error('Make sure to run: npm run build before deploying');
+    
+    // Fallback: serve a simple message
+    app.get('*', (req, res) => {
+      res.status(500).json({ 
+        error: 'React build not found', 
+        message: 'Please ensure the client is built before deployment',
+        path: buildPath
+      });
+    });
+  }
 } 

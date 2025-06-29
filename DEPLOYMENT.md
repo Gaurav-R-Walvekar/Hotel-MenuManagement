@@ -157,4 +157,56 @@ Visit: `https://your-app-name.onrender.com`
 
 - Render Documentation: [docs.render.com](https://docs.render.com)
 - MongoDB Atlas Documentation: [docs.atlas.mongodb.com](https://docs.atlas.mongodb.com)
-- GitHub Issues: For code-specific problems 
+- GitHub Issues: For code-specific problems
+
+## Render Deployment
+
+### Fixed Issues
+- **ENOENT Error**: The "no such file or directory, stat '/opt/render/project/src/client/build/index.html'" error has been fixed by updating the build process.
+
+### Updated Configuration
+The `render.yaml` file now includes the proper build commands:
+```yaml
+buildCommand: npm run deploy
+```
+
+This ensures that:
+1. Server dependencies are installed (`npm install`)
+2. Client dependencies are installed (`npm run install-client`)
+3. React client is built (`npm run build`)
+
+### Deployment Steps
+1. Push your code to GitHub
+2. Connect your repository to Render
+3. Render will automatically use the `render.yaml` configuration
+4. The build process will create the necessary client build files
+5. The server will serve the React app correctly
+
+### Troubleshooting
+
+#### If you still get build errors:
+1. Check that your MongoDB connection string is set in Render environment variables
+2. Ensure all environment variables are configured:
+   - `MONGO_URI` or `MONGODB_URI`
+   - `NODE_ENV=production`
+   - `PORT=10000`
+
+#### If the client build fails:
+1. Test locally first: `npm run deploy`
+2. Check that all client dependencies are in `client/package.json`
+3. Ensure the client can build locally: `cd client && npm run build`
+
+#### Manual Deployment (if needed):
+If Render's automatic deployment fails, you can:
+1. Build locally: `npm run deploy`
+2. Commit the `client/build` directory to your repository
+3. Deploy again
+
+### Local Testing
+Before deploying, test the production build locally:
+```bash
+npm run deploy
+NODE_ENV=production npm start
+```
+
+This will simulate the production environment and help catch issues before deployment. 
