@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Hotel, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
+import config from './config';
 
 function HotelMenu() {
   const { hotelName } = useParams();
@@ -22,21 +23,42 @@ function HotelMenu() {
     if (hotelData) {
       applyFilters();
     }
-  }, [hotelData, searchTerm, vegFilter]);
+  }, [hotelData]);
+
+  useEffect(() => {
+    if (hotelData) {
+      applyFilters();
+    }
+  }, [searchTerm, vegFilter]);
 
   const fetchHotelMenu = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/menu/${encodeURIComponent(hotelName)}`);
+      setError(null);
+      console.log('Fetching menu for hotel:', hotelName);
+      const response = await axios.get(`${config.API_BASE_URL}/api/menu/${encodeURIComponent(hotelName)}`);
+      console.log('API Response:', response);
+      console.log('Response data:', response.data);
+      console.log('Response data type:', typeof response.data);
+      console.log('Response data keys:', Object.keys(response.data || {}));
+      
+      if (!response.data) {
+        throw new Error('No data received from API');
+      }
+      
       setHotelData(response.data);
       // Initialize all categories as expanded
       const initialCollapsedState = {};
-      Object.keys(response.data).forEach(category => {
-        initialCollapsedState[category] = false;
-      });
+      if (response.data && typeof response.data === 'object') {
+        Object.keys(response.data).forEach(category => {
+          initialCollapsedState[category] = false;
+        });
+      }
       setCollapsedCategories(initialCollapsedState);
     } catch (err) {
-      setError('Hotel not found or failed to load menu');
+      console.error('Error details:', err);
+      console.error('Error response:', err.response);
+      setError(`Hotel not found or failed to load menu: ${err.message}`);
       console.error('Error fetching hotel menu:', err);
     } finally {
       setLoading(false);
@@ -45,6 +67,10 @@ function HotelMenu() {
 
   const applyFilters = () => {
     if (!hotelData) return;
+
+    console.log('Applying filters with hotelData:', hotelData);
+    console.log('Search term:', searchTerm);
+    console.log('Veg filter:', vegFilter);
 
     let filtered = { ...hotelData };
 
@@ -86,6 +112,7 @@ function HotelMenu() {
       filtered = vegFiltered;
     }
 
+    console.log('Final filtered data:', filtered);
     setFilteredData(filtered);
   };
 
@@ -162,6 +189,10 @@ function HotelMenu() {
 
   const displayData = filteredData || hotelData;
   const hasActiveFilters = searchTerm.trim() || vegFilter !== 'all';
+
+  console.log('Display data:', displayData);
+  console.log('Display data keys:', Object.keys(displayData || {}));
+  console.log('Has active filters:', hasActiveFilters);
 
   return (
     <div className="App">

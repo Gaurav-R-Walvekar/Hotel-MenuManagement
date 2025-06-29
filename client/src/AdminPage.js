@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Hotel, Utensils, DollarSign, Settings, Users, BarChart3, Plus, Edit, Trash2 } from 'lucide-react';
+import config from './config';
 
 function AdminPage() {
   const [menuData, setMenuData] = useState({});
@@ -17,9 +18,13 @@ function AdminPage() {
   const fetchMenuData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/menu');
+      console.log('Fetching menu data from:', `${config.API_BASE_URL}/api/menu`);
+      const response = await axios.get(`${config.API_BASE_URL}/api/menu`);
+      console.log('Admin API Response:', response);
+      console.log('Admin Response data:', response.data);
       setMenuData(response.data);
     } catch (err) {
+      console.error('Admin Error details:', err);
       setError('Failed to fetch menu data');
       console.error('Error fetching menu data:', err);
     } finally {

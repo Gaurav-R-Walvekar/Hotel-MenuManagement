@@ -1,7 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const Hotel = require('./models/Hotel');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -9,64 +12,107 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'client/build')));
 
-// Read menu data
-const getMenuData = () => {
-  try {
-    const menuData = fs.readFileSync(path.join(__dirname, 'menu.json'), 'utf8');
-    return JSON.parse(menuData);
-  } catch (error) {
-    console.error('Error reading menu.json:', error);
-    return { hotels: {} };
-  }
-};
+// Connect to MongoDB - HotelManagement database
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+if (process.env.NODE_ENV !== 'production') {
+  console.log('MONGO_URI:', mongoUri);
+  console.log('Database: HotelManagement');
+  console.log('Collection: menu');
+  mongoose.set('debug', true);
+} else {
+  mongoose.set('debug', false);
+}
+
+mongoose.connect(mongoUri, {
+  dbName: 'HotelManagement' // Explicitly specify the database name
+})
+  .then(() => {
+    console.log('MongoDB connected to HotelManagement database');
+    console.log('Using menu collection');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // API Routes
-app.get('/api/menu', (req, res) => {
-  const menuData = getMenuData();
-  res.json(menuData.hotels);
-});
-
-app.get('/api/menu/:hotelName', (req, res) => {
-  const menuData = getMenuData();
-  const hotelName = req.params.hotelName;
-  
-  if (menuData.hotels && menuData.hotels[hotelName]) {
-    res.json(menuData.hotels[hotelName].menu);
-  } else {
-    res.status(404).json({ error: 'Hotel not found' });
+app.get('/api/menu', async (req, res) => {
+  try {
+    const hotels = await Hotel.find({});
+    
+    const hotelsData = {};
+    hotels.forEach(hotel => {
+      hotelsData[hotel.name] = {
+        location: hotel.location,
+        menu: hotel.menu
+      };
+    });
+    
+    res.json(hotelsData);
+  } catch (error) {
+    console.error('Error fetching menu data:', error);
+    res.status(500).json({ error: 'Failed to fetch menu data' });
   }
 });
 
-app.get('/api/hotels', (req, res) => {
-  const menuData = getMenuData();
-  const hotels = menuData.hotels ? Object.keys(menuData.hotels) : [];
-  res.json(hotels);
-});
-
-app.get('/api/hotel-info/:hotelName', (req, res) => {
-  const menuData = getMenuData();
-  const hotelName = req.params.hotelName;
-  
-  if (menuData.hotels && menuData.hotels[hotelName]) {
-    const hotelInfo = {
-      name: hotelName,
-      location: menuData.hotels[hotelName].location,
-      menu: menuData.hotels[hotelName].menu
-    };
-    res.json(hotelInfo);
-  } else {
-    res.status(404).json({ error: 'Hotel not found' });
+app.get('/api/menu/:hotelName', async (req, res) => {
+  try {
+    const hotelName = req.params.hotelName;
+    const hotel = await Hotel.findOne({ name: hotelName });
+    console.log('Fetching menu for hotel:', hotelName);
+    if (hotel) {
+      res.json(hotel.menu);
+    } else {
+      res.status(404).json({ error: 'Hotel not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching hotel menu:', error);
+    res.status(500).json({ error: 'Failed to fetch hotel menu' });
   }
 });
 
-// Serve React app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+app.get('/api/hotels', async (req, res) => {
+  try {
+    const hotels = await Hotel.find({}, 'name');
+    const hotelNames = hotels.map(hotel => hotel.name);
+    res.json(hotelNames);
+  } catch (error) {
+    console.error('Error fetching hotels:', error);
+    res.status(500).json({ error: 'Failed to fetch hotels' });
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`API available at http://localhost:${PORT}/api/menu`);
-}); 
+app.get('/api/hotel-info/:hotelName', async (req, res) => {
+  try {
+    const hotelName = req.params.hotelName;
+    const hotel = await Hotel.findOne({ name: hotelName });
+    
+    if (hotel) {
+      const hotelInfo = {
+        name: hotel.name,
+        location: hotel.location,
+        menu: hotel.menu
+      };
+      res.json(hotelInfo);
+    } else {
+      res.status(404).json({ error: 'Hotel not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching hotel info:', error);
+    res.status(500).json({ error: 'Failed to fetch hotel info' });
+  }
+});
+
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
+
+// Serve React app in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+} 
