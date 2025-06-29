@@ -9,19 +9,8 @@ const Hotel = require('./models/Hotel');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration for Vercel deployment
-const corsOptions = {
-  origin: [
-    'http://localhost:3000', // Local development
-    'https://hotel-menu-management.vercel.app', // Replace with your Vercel domain
-    process.env.FRONTEND_URL // Environment variable for frontend URL
-  ].filter(Boolean), // Remove undefined values
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-
 // Middleware
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB - HotelManagement database
@@ -126,12 +115,34 @@ app.get('/api/hotel-info/:hotelName', async (req, res) => {
 
 // Health check endpoint for Render
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
+  res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
-// Remove static file serving since frontend will be on Vercel
-// The server now only serves API endpoints 
+// Serve React app in production
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, 'client/build');
+  const indexPath = path.join(buildPath, 'index.html');
+  
+  // Check if build directory exists
+  const fs = require('fs');
+  if (fs.existsSync(buildPath)) {
+    console.log('✅ React build directory found');
+    app.use(express.static(buildPath));
+    
+    app.get('*', (req, res) => {
+      res.sendFile(indexPath);
+    });
+  } else {
+    console.error('❌ React build directory not found at:', buildPath);
+    console.error('Make sure to run: npm run build before deploying');
+    
+    // Fallback: serve a simple message
+    app.get('*', (req, res) => {
+      res.status(500).json({ 
+        error: 'React build not found', 
+        message: 'Please ensure the client is built before deployment',
+        path: buildPath
+      });
+    });
+  }
+} 
