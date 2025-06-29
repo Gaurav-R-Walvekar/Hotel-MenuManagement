@@ -16,6 +16,13 @@ app.use(express.json());
 // Connect to MongoDB - HotelManagement database
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
+if (!mongoUri) {
+  console.error('❌ MongoDB connection string not found!');
+  console.error('Please set either MONGO_URI or MONGODB_URI environment variable.');
+  console.error('You can create a .env file with your MongoDB connection string.');
+  process.exit(1);
+}
+
 if (process.env.NODE_ENV !== 'production') {
   console.log('MONGO_URI:', mongoUri);
   console.log('Database: HotelManagement');
@@ -29,11 +36,14 @@ mongoose.connect(mongoUri, {
   dbName: 'HotelManagement' // Explicitly specify the database name
 })
   .then(() => {
-    console.log('MongoDB connected to HotelManagement database');
-    console.log('Using menu collection');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    console.log('✅ MongoDB connected to HotelManagement database');
+    console.log('📊 Using menu collection');
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   })
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });
 
 // API Routes
 app.get('/api/menu', async (req, res) => {
