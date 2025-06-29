@@ -198,12 +198,14 @@ function HotelMenu() {
     <div className="App">
       <header className="header">
         <div className="container">
-          <div className="hotel-info">
-            <h1>
-              <Hotel className="header-icon" />
-              {hotelName}
-            </h1>
-            <p>Delicious menu offerings</p>
+          <div className="header-content">
+            <div className="hotel-info">
+              <h1>
+                <Hotel className="header-icon" />
+                {hotelName}
+              </h1>
+              <p>Delicious menu offerings</p>
+            </div>
           </div>
         </div>
       </header>
@@ -249,7 +251,8 @@ function HotelMenu() {
 
         {/* Menu Display */}
         <div className="menu-container">
-          <h2 className="menu-title">{hotelName} Menu</h2>
+          <h2 className="menu-title">Menu</h2>
+          
           {Object.keys(displayData || {}).length === 0 ? (
             <div className="no-results">
               <p>No items found matching your filters.</p>
@@ -268,7 +271,10 @@ function HotelMenu() {
                     className="category-header"
                     onClick={() => toggleCategory(category)}
                   >
-                    <h3 className="category-title">{category}</h3>
+                    <div className="category-info">
+                      <h3 className="category-title">{category}</h3>
+                      <span className="category-count">{Object.keys(items).length} items</span>
+                    </div>
                     <div className="category-toggle">
                       {collapsedCategories[category] ? (
                         <ChevronDown className="toggle-icon" />
@@ -282,9 +288,12 @@ function HotelMenu() {
                       <div key={itemName} className="menu-item">
                         <div className="item-info">
                           {getVegIcon(itemName, category)}
-                          <h4 className="item-name">{itemName}</h4>
+                          <div className="item-details">
+                            <h4 className="item-name">{itemName}</h4>
+                            <span className="item-category">{category}</span>
+                          </div>
                         </div>
-                        <div className="item-price">Rs {price}</div>
+                        <div className="item-price">₹{price}</div>
                       </div>
                     ))}
                   </div>
