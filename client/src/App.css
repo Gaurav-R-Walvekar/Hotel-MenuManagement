@@ -1,37 +1,88 @@
+/* Zomato-inspired Theme */
+:root {
+  --zomato-red: #e23744;
+  --zomato-dark-red: #cb202d;
+  --zomato-orange: #ff6b35;
+  --zomato-yellow: #ffa726;
+  --zomato-gray: #1c1c1c;
+  --zomato-light-gray: #f8f9fa;
+  --zomato-text: #1c1c1c;
+  --zomato-text-light: #686b78;
+  --zomato-border: #d4d5d9;
+  --zomato-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --zomato-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
 .App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(135deg, #e23744 0%, #cb202d 50%, #ff6b35 100%);
+  position: relative;
+}
+
+.App::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Header Styles */
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--zomato-text);
   padding: 2rem 0;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--zomato-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(226, 55, 68, 0.1) 0%, rgba(203, 32, 45, 0.1) 100%);
+  z-index: -1;
 }
 
 .header h1 {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  color: var(--zomato-red);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .header-icon {
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--zomato-red);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  animation: pulse 3s infinite;
 }
 
 .header p {
   font-size: 1.1rem;
-  opacity: 0.9;
-  font-weight: 300;
+  color: var(--zomato-text-light);
+  font-weight: 400;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 /* Welcome Section */
@@ -44,27 +95,49 @@
 }
 
 .welcome-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: var(--zomato-shadow-hover);
   padding: 3rem;
   text-align: center;
   max-width: 600px;
   width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: fadeInUp 1s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(226, 55, 68, 0.05), transparent);
+  animation: shimmer 3s infinite;
+  pointer-events: none;
 }
 
 .welcome-card h2 {
-  color: #667eea;
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  color: var(--zomato-red);
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--zomato-red) 0%, var(--zomato-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .welcome-card p {
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-size: 1.1rem;
   margin-bottom: 2rem;
   line-height: 1.6;
+  font-weight: 400;
 }
 
 .welcome-actions {
@@ -77,57 +150,42 @@
 /* Category Controls */
 .category-controls {
   display: flex;
-  gap: 1rem;
-}
-
-/* Category Controls */
-.category-controls {
-  display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 2.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-.category-controls .btn {
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  color: #4a5568;
-  font-weight: 600;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.category-controls .btn:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: translateY(-3px);
-  border-color: rgba(102, 126, 234, 0.5);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 .category-controls .btn {
   padding: 0.75rem 1.5rem;
   font-size: 0.9rem;
+  border-radius: 25px;
+  background: white;
+  border: 2px solid var(--zomato-border);
+  color: var(--zomato-text);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--zomato-shadow);
+}
+
+.category-controls .btn:hover,
+.category-controls .btn.active {
+  background: var(--zomato-red);
+  color: white;
+  border-color: var(--zomato-red);
+  transform: translateY(-2px);
+  box-shadow: var(--zomato-shadow-hover);
 }
 
 /* Filter Section */
 .filter-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  margin-bottom: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeInUp 0.8s ease-out;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  box-shadow: var(--zomato-shadow);
+  padding: 2rem;
   margin-bottom: 2rem;
+  border: 1px solid var(--zomato-border);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .search-box {
@@ -137,28 +195,30 @@
 
 .search-icon {
   position: absolute;
-  left: 1.25rem;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   width: 1.25rem;
   height: 1.25rem;
-  color: #6c757d;
+  color: var(--zomato-text-light);
   z-index: 1;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid var(--zomato-border);
+  border-radius: 12px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
   background: white;
+  color: var(--zomato-text);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--zomato-red);
+  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.1);
 }
 
 .filter-controls {
@@ -173,79 +233,68 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 0.75rem 1.25rem;
-  border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: var(--zomato-light-gray);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--zomato-border);
 }
 
 .filter-icon {
   width: 1.25rem;
   height: 1.25rem;
-  color: #6c757d;
+  color: var(--zomato-red);
 }
 
 .filter-select {
-  padding: 0.5rem 1rem;
-  border: 2px solid #e1e5e9;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--zomato-border);
   border-radius: 8px;
   font-size: 0.9rem;
   background: white;
-  color: #333;
+  color: var(--zomato-text);
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--zomato-red);
+  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.1);
 }
 
 .clear-filters {
   padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  color: #667eea;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  background: #f8f9fa;
-  border: 1px solid #e1e5e9;
-  color: #6c757d;
+  background: var(--zomato-light-gray);
+  border: 2px solid var(--zomato-border);
+  color: var(--zomato-text);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .clear-filters:hover {
-  background: rgba(255, 255, 255, 1);
-  border-color: rgba(102, 126, 234, 0.4);
+  background: var(--zomato-red);
+  color: white;
+  border-color: var(--zomato-red);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  background: #e9ecef;
-  border-color: #adb5bd;
+  box-shadow: var(--zomato-shadow);
 }
 
 /* No Results */
 .no-results {
   text-align: center;
-  padding: 3rem 1rem;
-  color: #6c757d;
-}
-
-/* No Results */
-.no-results {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #4a5568;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 3rem 2rem;
+  color: var(--zomato-text-light);
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--zomato-border);
   animation: fadeInUp 0.8s ease-out;
+}
+
 .no-results p {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
+  font-weight: 500;
 }
 
 /* Veg Indicators */
@@ -253,46 +302,24 @@
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 0.8rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
-.no-results p {
-  font-size: 1.3rem;
-  margin-bottom: 2rem;
-  font-weight: 500;
 .veg-indicator.veg {
   color: #28a745;
-}
-
-/* Veg Indicators */
-.veg-indicator {
-  display: inline-block;
-  margin-right: 0.75rem;
-  font-size: 1rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.veg-indicator.veg {
-  color: #38a169;
   animation: pulse 2s infinite;
 }
 
 .veg-indicator.non-veg {
-  color: #e53e3e;
+  color: var(--zomato-red);
   animation: pulse 2s infinite 1s;
 }
 
 /* Admin Header Styles */
 .admin-header {
-  background: rgba(44, 62, 80, 0.9);
+  background: var(--zomato-gray);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-.veg-indicator.non-veg {
-  color: #dc3545;
-}
-
-/* Admin Header Styles */
-.admin-header {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
 }
 
 .admin-header-content {
@@ -306,30 +333,13 @@
 .admin-title {
   flex: 1;
   text-align: left;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
-.admin-title h1 {
-  justify-content: flex-start;
-  font-size: 2.5rem;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-.admin-title {
-  flex: 1;
-  text-align: left;
-}
-
-.admin-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-/* Header Content for Hotel Menu Pages */
-.header-content {
 .admin-title h1 {
   justify-content: flex-start;
   font-size: 2rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .admin-actions {
@@ -349,20 +359,8 @@
 .hotel-info {
   flex: 1;
   text-align: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
-.hotel-info {
-  flex: 1;
-  text-align: center;
-}
-
-/* Main Content */
-main {
-  flex: 1;
-  padding: 3rem 0;
 /* Main Content */
 main {
   flex: 1;
@@ -371,97 +369,62 @@ main {
 
 /* Hotel Selector */
 .hotel-selector {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2.5rem;
-/* Hotel Selector */
-.hotel-selector {
   background: white;
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: var(--zomato-shadow);
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  gap: 1rem;
+  border: 1px solid var(--zomato-border);
   animation: fadeInUp 0.8s ease-out;
 }
 
 .hotel-selector label {
-  font-weight: 700;
-  color: #4a5568;
-  font-size: 1.1rem;
-}
-
-.hotel-select {
-  flex: 1;
-  padding: 1rem 1.25rem;
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  border-radius: 12px;
-  font-size: 1.1rem;
-  background: rgba(255, 255, 255, 0.9);
-  color: #4a5568;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-}
-
-.hotel-select:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-  background: rgba(255, 255, 255, 1);
-  gap: 1rem;
-}
-
-.hotel-selector label {
   font-weight: 600;
-  color: #333;
+  color: var(--zomato-text);
   font-size: 1rem;
 }
 
 .hotel-select {
   flex: 1;
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--zomato-border);
   border-radius: 8px;
   font-size: 1rem;
   background: white;
-  color: #333;
-  transition: border-color 0.3s ease;
+  color: var(--zomato-text);
+  transition: all 0.3s ease;
 }
 
 .hotel-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--zomato-red);
+  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.1);
 }
 
 /* Hotels Grid */
 .hotels-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 2.5rem;
-  margin-bottom: 3rem;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
 }
 
 .hotel-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--zomato-shadow);
+  padding: 1.5rem;
   text-decoration: none;
   color: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  border: 1px solid var(--zomato-border);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
   animation: fadeInUp 0.8s ease-out;
 }
 
@@ -472,19 +435,8 @@ main {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(226, 55, 68, 0.05), transparent);
   transition: left 0.6s;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  cursor: pointer;
 }
 
 .hotel-card:hover::before {
@@ -492,12 +444,9 @@ main {
 }
 
 .hotel-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
-.hotel-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--zomato-shadow-hover);
+  border-color: var(--zomato-red);
 }
 
 .hotel-card-header {
@@ -506,29 +455,11 @@ main {
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.hotel-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+  border-bottom: 2px solid var(--zomato-light-gray);
 }
 
 .hotel-card-header h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #4c51bf;
-  margin: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-.hotel-card-header h2 {
-  color: #667eea;
+  color: var(--zomato-red);
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
@@ -537,15 +468,11 @@ main {
 .arrow-icon {
   width: 1.5rem;
   height: 1.5rem;
-  color: #667eea;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: #667eea;
+  color: var(--zomato-red);
   transition: transform 0.3s ease;
 }
 
 .hotel-card:hover .arrow-icon {
-  transform: translateX(5px);
-  color: #764ba2;
   transform: translateX(5px);
 }
 
@@ -553,18 +480,11 @@ main {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #718096;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(102, 126, 234, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
   margin-bottom: 1rem;
   padding: 0.5rem;
-  background: #f8f9fa;
+  background: var(--zomato-light-gray);
   border-radius: 8px;
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -572,14 +492,11 @@ main {
 .location-icon {
   width: 1rem;
   height: 1rem;
-  color: #667eea;
+  color: var(--zomato-red);
 }
 
 .hotel-stats {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
@@ -589,36 +506,25 @@ main {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  backdrop-filter: blur(10px);
-  gap: 0.5rem;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-weight: 500;
 }
 
 .stat-icon-small {
   width: 1rem;
   height: 1rem;
-  color: #667eea;
+  color: var(--zomato-red);
 }
 
 .hotel-categories {
-  margin-bottom: 1.5rem;
   margin-bottom: 1rem;
   flex: 1;
 }
 
 .hotel-categories h3 {
   font-size: 1rem;
-  font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
-  color: #333;
+  color: var(--zomato-text);
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
@@ -630,388 +536,231 @@ main {
 }
 
 .category-tag {
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  background: #f8f9fa;
-  color: #667eea;
+  background: var(--zomato-light-gray);
+  color: var(--zomato-red);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e1e5e9;
+  border: 1px solid var(--zomato-border);
 }
 
 .hotel-card-footer {
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--zomato-light-gray);
   text-align: center;
 }
 
-.category-tag:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-}
-
-.hotel-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 1rem;
-  border-top: 2px solid rgba(102, 126, 234, 0.1);
-}
-
 .view-menu-text {
-  color: #667eea;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hotel-card:hover .view-menu-text {
-  color: #764ba2;
-  transform: translateX(5px);
-}
-
-/* Admin Stats */
-.admin-stats {
-.view-menu-text {
-  color: #667eea;
+  color: var(--zomato-red);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
-/* Admin Styles */
+/* Admin Stats */
 .admin-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.admin-stat-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.8s ease-out;
-  position: relative;
-  overflow: hidden;
-}
-
-.admin-stat-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-  animation: shimmer 4s infinite;
-  pointer-events: none;
-}
-
-.admin-stat-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
 .admin-stat-card {
   background: white;
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: var(--zomato-shadow);
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-left: 4px solid #2c3e50;
+  transition: all 0.3s ease;
+  border-left: 4px solid var(--zomato-red);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .admin-stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--zomato-shadow-hover);
 }
 
 .admin-stat-icon {
-  width: 4rem;
-  height: 4rem;
-  margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-.admin-stat-icon {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background: linear-gradient(135deg, var(--zomato-red) 0%, var(--zomato-orange) 100%);
   color: white;
   padding: 1rem;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
-.admin-stat-icon svg {
-  width: 2rem;
-  height: 2rem;
-  color: white;
 .admin-stat-icon svg {
   width: 1.5rem;
   height: 1.5rem;
 }
 
 .admin-stat-content h3 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #4c51bf;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-.admin-stat-content h3 {
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--zomato-text);
   margin-bottom: 0.25rem;
 }
 
 .admin-stat-content p {
-  color: #718096;
-  font-size: 1.1rem;
-  font-weight: 500;
-.admin-stat-content p {
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-weight: 500;
   margin: 0;
 }
 
 /* Admin Section */
 .admin-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  margin-bottom: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeInUp 0.8s ease-out;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--zomato-shadow);
   padding: 2rem;
   margin-bottom: 2rem;
+  border: 1px solid var(--zomato-border);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--zomato-light-gray);
 }
 
 .section-header h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #4c51bf;
-  color: #2c3e50;
+  color: var(--zomato-text);
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .section-header h2 svg {
-  width: 1.8rem;
-  height: 1.8rem;
-  color: #667eea;
   width: 1.5rem;
   height: 1.5rem;
+  color: var(--zomato-red);
 }
 
 /* Add Hotel Form */
 .add-hotel-form {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 2rem;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  background: #f8f9fa;
+  background: var(--zomato-light-gray);
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
+  border: 1px solid var(--zomato-border);
 }
 
 .add-hotel-form h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
+  color: var(--zomato-text);
   margin-bottom: 1rem;
   font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
   display: block;
   font-weight: 600;
-  color: #4a5568;
-  font-weight: 600;
-  color: #333;
+  color: var(--zomato-text);
   margin-bottom: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .form-input {
   width: 100%;
-  padding: 1rem 1.25rem;
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  border-radius: 12px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  color: #4a5568;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
   padding: 0.75rem;
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--zomato-border);
   border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  background: white;
+  color: var(--zomato-text);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-  background: rgba(255, 255, 255, 1);
-  border-color: #2c3e50;
+  border-color: var(--zomato-red);
+  box-shadow: 0 0 0 3px rgba(226, 55, 68, 0.1);
 }
 
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 /* Admin Hotels Grid */
 .admin-hotels-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1.5rem;
 }
 
 .admin-hotel-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.8s ease-out;
-  background: #f8f9fa;
+  background: var(--zomato-light-gray);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid #e1e5e9;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--zomato-border);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .admin-hotel-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--zomato-shadow-hover);
 }
 
 .admin-hotel-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e1e5e9;
+  border-bottom: 1px solid var(--zomato-border);
 }
 
 .admin-hotel-header h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #4c51bf;
-  margin: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #2c3e50;
+  color: var(--zomato-text);
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
 }
 
 .admin-hotel-location {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #718096;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(102, 126, 234, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
   margin-bottom: 1rem;
   padding: 0.5rem;
-  background: #f8f9fa;
+  background: white;
   border-radius: 6px;
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .admin-hotel-actions {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .action-btn {
-  padding: 0.75rem 1.25rem;
   background: none;
   border: none;
-  border-radius: 12px;
-  font-weight: 600;
   padding: 0.5rem;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
   justify-content: center;
 }
 
@@ -1021,36 +770,23 @@ main {
 }
 
 .edit-btn {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
   color: #3498db;
 }
 
 .edit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(72, 187, 120, 0.4);
   background: #e3f2fd;
 }
 
 .delete-btn {
-  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
-  color: #e74c3c;
+  color: var(--zomato-red);
 }
 
 .delete-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(245, 101, 101, 0.4);
   background: #ffebee;
 }
 
 .admin-hotel-stats {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
@@ -1060,63 +796,40 @@ main {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  backdrop-filter: blur(10px);
-  gap: 0.5rem;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-weight: 500;
 }
 
 .admin-hotel-categories {
-  margin-bottom: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .admin-hotel-categories h4 {
   font-size: 1rem;
-  font-weight: 600;
-  color: #4a5568;
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
-  color: #333;
+  color: var(--zomato-text);
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
 .admin-hotel-footer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 1rem;
-  border-top: 2px solid rgba(102, 126, 234, 0.1);
   gap: 1rem;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #e1e5e9;
+  border-top: 1px solid var(--zomato-border);
 }
 
+/* Quick Actions */
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .quick-action-btn {
-  padding: 0.75rem 1.25rem;
-  background: rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  border-radius: 12px;
-  color: #667eea;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--zomato-border);
   padding: 1rem;
   border-radius: 12px;
   cursor: pointer;
@@ -1124,45 +837,22 @@ main {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  backdrop-filter: blur(10px);
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--zomato-text);
 }
 
 .quick-action-btn:hover {
-  background: rgba(255, 255, 255, 1);
-  border-color: rgba(102, 126, 234, 0.4);
+  border-color: var(--zomato-red);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border-color: #2c3e50;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--zomato-shadow);
 }
 
 .quick-action-btn svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--zomato-red);
 }
 
-/* Stats Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.stat-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.8s ease-out;
-  position: relative;
-  overflow: hidden;
 /* Statistics Grid */
 .stats-grid {
   display: grid;
@@ -1174,21 +864,22 @@ main {
 .stat-card {
   background: white;
   padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: var(--zomato-shadow);
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--zomato-shadow-hover);
 }
 
 .stat-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--zomato-red) 0%, var(--zomato-orange) 100%);
   color: white;
   padding: 1rem;
   border-radius: 12px;
@@ -1205,12 +896,12 @@ main {
 .stat-content h3 {
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--zomato-text);
   margin-bottom: 0.25rem;
 }
 
 .stat-content p {
-  color: #6c757d;
+  color: var(--zomato-text-light);
   font-weight: 500;
   margin: 0;
 }
@@ -1219,57 +910,13 @@ main {
 .menu-container {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--zomato-shadow);
   overflow: hidden;
+  animation: fadeInUp 0.8s ease-out;
 }
 
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-  animation: shimmer 4s infinite;
-  pointer-events: none;
-}
-
-.stat-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
-}
-
-.stat-icon {
-  width: 4rem;
-  height: 4rem;
-  margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-}
-
-.stat-icon svg {
-  width: 2rem;
-  height: 2rem;
-  color: white;
-}
-
-.stat-content h3 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #4c51bf;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 .menu-title {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--zomato-red) 0%, var(--zomato-orange) 100%);
   color: white;
   padding: 1.5rem;
   margin: 0;
@@ -1285,13 +932,13 @@ main {
 
 /* Category Card */
 .category-card {
-  border-right: 1px solid #e1e5e9;
-  border-bottom: 1px solid #e1e5e9;
+  border-right: 1px solid var(--zomato-border);
+  border-bottom: 1px solid var(--zomato-border);
   transition: background-color 0.3s ease;
 }
 
 .category-card:hover {
-  background-color: #f8f9fa;
+  background-color: var(--zomato-light-gray);
 }
 
 .category-card:last-child {
@@ -1305,15 +952,15 @@ main {
   padding: 1.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  border-bottom: 1px solid #e1e5e9;
+  border-bottom: 1px solid var(--zomato-border);
 }
 
 .category-header:hover {
-  background-color: #f0f0f0;
+  background-color: var(--zomato-light-gray);
 }
 
 .category-title {
-  color: #667eea;
+  color: var(--zomato-red);
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
@@ -1326,18 +973,18 @@ main {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background: #f8f9fa;
+  background: var(--zomato-light-gray);
   transition: all 0.3s ease;
 }
 
 .category-toggle:hover {
-  background: #e9ecef;
+  background: var(--zomato-border);
 }
 
 .toggle-icon {
   width: 1.25rem;
   height: 1.25rem;
-  color: #667eea;
+  color: var(--zomato-red);
   transition: transform 0.3s ease;
 }
 
@@ -1358,114 +1005,18 @@ main {
   opacity: 0;
 }
 
-.stat-content p {
-  color: #718096;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-/* Menu Container */
-.menu-container {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeInUp 0.8s ease-out;
 .menu-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  background: #f8f9fa;
+  background: var(--zomato-light-gray);
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
-.menu-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #4c51bf;
-  text-align: center;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.menu-grid {
-  display: grid;
-  gap: 2rem;
-}
-
-.category-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeInUp 0.8s ease-out;
-}
-
-.category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  border-color: rgba(102, 126, 234, 0.4);
-}
-
-.category-card:last-child {
-  margin-bottom: 0;
-}
-
-.category-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1.5rem 2rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.category-header:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-}
-
-.category-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.category-toggle {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.category-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
-
-.toggle-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: white;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 .menu-item:hover {
-  background: #e9ecef;
+  background: var(--zomato-border);
 }
 
 .item-info {
@@ -1476,74 +1027,21 @@ main {
 
 .item-name {
   font-weight: 500;
-  color: #333;
+  color: var(--zomato-text);
   margin: 0;
   font-size: 1rem;
 }
 
-.items-list {
-  max-height: 1000px;
-  overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.items-list.collapsed {
-  max-height: 0;
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem 2rem;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.menu-item:hover {
-  background: rgba(102, 126, 234, 0.05);
-  transform: translateX(5px);
-}
-
-.menu-item:last-child {
-  border-bottom: none;
-}
-
-.item-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.item-name {
 .item-price {
   font-weight: 600;
-  color: #667eea;
+  color: var(--zomato-red);
   font-size: 1.1rem;
-  font-weight: 600;
-  color: #4a5568;
-  margin: 0;
-}
-
-.item-price {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #667eea;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin-left: 1rem;
 }
 
 /* Footer */
 .footer {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 2rem 0;
-  background: #333;
+  background: var(--zomato-gray);
   color: white;
   text-align: center;
   padding: 1.5rem 0;
@@ -1551,48 +1049,6 @@ main {
 }
 
 .footer p {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
-  font-weight: 400;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Loading and Error States */
-.loading, .error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeInUp 0.8s ease-out;
-}
-
-.spinner {
-  width: 3rem;
-  height: 3rem;
-  border: 4px solid rgba(102, 126, 234, 0.2);
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1.5rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error p {
-  font-size: 1.2rem;
-  color: #e53e3e;
-  margin-bottom: 2rem;
-  font-weight: 500;
   margin: 0;
   opacity: 0.8;
 }
@@ -1605,13 +1061,18 @@ main {
   justify-content: center;
   min-height: 50vh;
   text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  border: 1px solid var(--zomato-border);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #e1e5e9;
-  border-top: 4px solid #667eea;
+  border: 4px solid var(--zomato-light-gray);
+  border-top: 4px solid var(--zomato-red);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -1623,7 +1084,7 @@ main {
 }
 
 .error p {
-  color: #dc3545;
+  color: var(--zomato-red);
   margin-bottom: 1rem;
   font-size: 1.1rem;
 }
@@ -1637,20 +1098,17 @@ main {
   }
 
   .header-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .welcome-card {
-    padding: 2.5rem 1.5rem;
-    margin: 1rem;
-    padding: 2rem;
+    padding: 2rem 1.5rem;
     margin: 1rem;
   }
 
   .welcome-card h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .category-controls {
@@ -1661,150 +1119,6 @@ main {
   .category-controls .btn {
     width: 100%;
     max-width: 300px;
-  }
-
-  
-  .category-controls {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .filter-controls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .veg-filter {
-    justify-content: center;
-  }
-
-  .search-box {
-    margin-bottom: 1.5rem;
-  }
-  
-  .admin-header-content {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .hotels-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .admin-hotels-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .admin-stats {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  
-  .admin-stats {
-    grid-template-columns: 1fr;
-  }
-  
-  .menu-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .category-card {
-    border-right: none;
-  }
-
-  .hotel-stats {
-    flex-direction: column;
-    gap: 0.75rem;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .admin-hotel-stats {
-    flex-direction: column;
-    gap: 0.75rem;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .admin-hotel-footer {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .quick-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .section-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .section-header h2 {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 15px;
-  }
-
-  .header {
-    padding: 1.5rem 0;
-  }
-
-  .header h1 {
-    font-size: 1.75rem;
-  }
-
-  .welcome-card {
-    padding: 2rem 1rem;
-  }
-
-  .welcome-card h2 {
-    font-size: 1.75rem;
-    font-size: 1.25rem;
-  }
-
-  .stat-card {
-    padding: 1rem;
-  }
-  
-  .admin-stat-card {
-    padding: 1rem;
-  }
-  
-  .stat-content h3 {
-    font-size: 1.5rem;
-  }
-  
-  .admin-stat-content h3 {
-    font-size: 1.5rem;
-  }
-
-  .menu-item {
-    padding: 1rem 1.5rem;
-  
-  .hotel-card {
-    padding: 1rem;
-  }
-
-  .category-controls {
-    flex-direction: column;
-    align-items: center;
   }
 
   .filter-controls {
@@ -1826,18 +1140,135 @@ main {
     text-align: center;
   }
 
-  .admin-title h1 {
-    font-size: 2rem;
-    justify-content: center;
+  .hotels-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-  .header-content {
+  .admin-hotels-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-card {
+    margin-bottom: 1rem;
+  }
+
+  .hotel-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .admin-hotel-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .admin-hotel-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .quick-actions {
+    flex-direction: column;
+  }
+
+  .section-header {
     flex-direction: column;
     text-align: center;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .section-header h2 {
+    font-size: 1.3rem;
   }
 }
 
-/* Additional responsive improvements */
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header {
+    padding: 1.5rem 0;
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+  }
+
+  .welcome-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .welcome-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .admin-stat-card {
+    padding: 1rem;
+  }
+
+  .stat-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .admin-stat-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .hotel-card {
+    padding: 1rem;
+  }
+
+  .admin-hotel-card {
+    padding: 1rem;
+  }
+
+  .hotel-card-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .admin-hotel-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .admin-section {
+    padding: 1rem;
+  }
+
+  .category-header {
+    padding: 1rem;
+  }
+
+  .items-list {
+    padding: 1rem;
+  }
+
+  .menu-item {
+    padding: 1rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .hotels-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1845,9 +1276,6 @@ main {
 
   .admin-hotels-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  
-  .admin-hotel-card {
-    padding: 1rem;
   }
 
   .stats-grid {
@@ -1907,9 +1335,6 @@ main {
   .menu-title,
   .category-title {
     color: #e2e8f0;
-  
-  .hotel-card-header h2 {
-    font-size: 1.25rem;
   }
 
   .welcome-card p,
@@ -1927,7 +1352,7 @@ main {
   .hotel-select,
   .form-input {
     background: rgba(26, 32, 44, 0.9);
-    border-color: rgba(102, 126, 234, 0.3);
+    border-color: rgba(226, 55, 68, 0.3);
     color: #e2e8f0;
   }
 
@@ -1936,14 +1361,14 @@ main {
   .hotel-select:focus,
   .form-input:focus {
     background: rgba(26, 32, 44, 1);
-    border-color: #667eea;
+    border-color: var(--zomato-red);
   }
 
   .btn-secondary,
   .clear-filters,
   .quick-action-btn {
     background: rgba(26, 32, 44, 0.9);
-    border-color: rgba(102, 126, 234, 0.3);
+    border-color: rgba(226, 55, 68, 0.3);
     color: #e2e8f0;
   }
 
@@ -1951,18 +1376,18 @@ main {
   .clear-filters:hover,
   .quick-action-btn:hover {
     background: rgba(26, 32, 44, 1);
-    border-color: rgba(102, 126, 234, 0.5);
+    border-color: rgba(226, 55, 68, 0.5);
   }
 
   .hotel-stat,
   .admin-hotel-stat {
     background: rgba(45, 55, 72, 0.8);
-    border-color: rgba(102, 126, 234, 0.2);
+    border-color: rgba(226, 55, 68, 0.2);
   }
 
   .veg-filter {
     background: rgba(45, 55, 72, 0.8);
-    border-color: rgba(102, 126, 234, 0.2);
+    border-color: rgba(226, 55, 68, 0.2);
   }
 
   .items-list {
@@ -1970,7 +1395,7 @@ main {
   }
 
   .menu-item:hover {
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(226, 55, 68, 0.1);
   }
 }
 
@@ -2011,49 +1436,42 @@ main {
   .items-list {
     background: white !important;
   }
-  
-  .admin-section {
-    padding: 1rem;
+}
+
+/* Smooth animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  
-  .category-header {
-    padding: 1rem;
-  }
-  
-  .items-list {
-    padding: 1rem;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.category-controls {
-  flex-direction: column;
-  align-items: center;
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
-.filter-controls {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
 }
 
-.veg-filter {
-  justify-content: center;
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
 }
 
-.search-box {
-  margin-bottom: 1.5rem;
-}
-
-.admin-header-content {
-  flex-direction: column;
-  text-align: center;
-}
-
-.admin-title h1 {
-  justify-content: center;
-}
-
-.header-content {
-  flex-direction: column;
-  text-align: center;
+.pulse {
+  animation: pulse 2s infinite;
 } 
