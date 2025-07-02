@@ -16,9 +16,10 @@ function HotelMenu() {
   const [filteredData, setFilteredData] = useState(null);
   const [showCategorySelector, setShowCategorySelector] = useState(false);
   const categoryRefs = useRef({});
+  const [hotelInfo, setHotelInfo] = useState(null);
 
   useEffect(() => {
-    fetchHotelMenu();
+    fetchHotelInfo();
   }, [hotelName]);
 
   useEffect(() => {
@@ -33,35 +34,26 @@ function HotelMenu() {
     }
   }, [searchTerm, vegFilter]);
 
-  const fetchHotelMenu = async () => {
+  const fetchHotelInfo = async () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('Fetching menu for hotel:', hotelName);
-      const response = await axios.get(`${config.API_BASE_URL}/api/menu/${encodeURIComponent(hotelName)}`);
-      console.log('API Response:', response);
-      console.log('Response data:', response.data);
-      console.log('Response data type:', typeof response.data);
-      console.log('Response data keys:', Object.keys(response.data || {}));
-      
-      if (!response.data) {
+      const response = await axios.get(`${config.API_BASE_URL}/api/hotel-info/${encodeURIComponent(hotelName)}`);
+      if (!response.data || !response.data.menu) {
         throw new Error('No data received from API');
       }
-      
-      setHotelData(response.data);
+      setHotelInfo(response.data);
+      setHotelData(response.data.menu);
       // Initialize all categories as expanded
       const initialCollapsedState = {};
-      if (response.data && typeof response.data === 'object') {
-        Object.keys(response.data).forEach(category => {
+      if (response.data.menu && typeof response.data.menu === 'object') {
+        Object.keys(response.data.menu).forEach(category => {
           initialCollapsedState[category] = false;
         });
       }
       setCollapsedCategories(initialCollapsedState);
     } catch (err) {
-      console.error('Error details:', err);
-      console.error('Error response:', err.response);
       setError(`Hotel not found or failed to load menu: ${err.message}`);
-      console.error('Error fetching hotel menu:', err);
     } finally {
       setLoading(false);
     }
@@ -236,7 +228,7 @@ function HotelMenu() {
                 <Hotel className="header-icon" />
                 {hotelName}
               </h1>
-              <p>Delicious menu offerings</p>
+              <p>{hotelInfo && hotelInfo.location ? hotelInfo.location : ''}</p>
             </div>
           </div>
         </div>
