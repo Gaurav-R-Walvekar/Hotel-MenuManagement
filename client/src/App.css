@@ -1170,4 +1170,77 @@ main {
   .veg-indicator {
     font-size: 1rem;
   }
+}
+
+.floating-category-btn {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  z-index: 1000;
+  background: var(--accent-blue);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 2rem;
+  box-shadow: var(--shadow-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.floating-category-btn:hover {
+  background: var(--accent-mint);
+  box-shadow: 0 8px 32px rgba(160, 174, 192, 0.18);
+}
+.floating-category-list {
+  position: fixed;
+  bottom: 80px;
+  right: 2.5rem;
+  z-index: 1001;
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-medium);
+  padding: 1rem 0.5rem;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: fadeInUp 0.2s;
+}
+.category-list-btn {
+  background: var(--accent-blue);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+.category-list-btn:hover {
+  background: var(--accent-mint);
+}
+@media (max-width: 768px) {
+  .floating-category-btn {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+  }
+  .floating-category-list {
+    bottom: 60px;
+    right: 1.2rem;
+    min-width: 140px;
+    padding: 0.5rem 0.2rem;
+  }
+  .category-list-btn {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.7rem;
+  }
 } 

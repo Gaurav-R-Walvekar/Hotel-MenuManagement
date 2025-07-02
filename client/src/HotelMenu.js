@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Hotel, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
+import { Hotel, ChevronDown, ChevronUp, Search, Filter, Menu } from 'lucide-react';
 import config from './config';
 
 function HotelMenu() {
@@ -14,6 +14,8 @@ function HotelMenu() {
   const [searchTerm, setSearchTerm] = useState('');
   const [vegFilter, setVegFilter] = useState('all'); // 'all', 'veg', 'non-veg'
   const [filteredData, setFilteredData] = useState(null);
+  const [showCategorySelector, setShowCategorySelector] = useState(false);
+  const categoryRefs = useRef({});
 
   useEffect(() => {
     fetchHotelMenu();
@@ -163,6 +165,15 @@ function HotelMenu() {
     );
   };
 
+  // Scroll to category
+  const scrollToCategory = (category) => {
+    setShowCategorySelector(false);
+    const ref = categoryRefs.current[category];
+    if (ref && ref.scrollIntoView) {
+      ref.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   if (loading) {
     return (
       <div className="container">
@@ -196,6 +207,27 @@ function HotelMenu() {
 
   return (
     <div className="App">
+      {/* Floating Category Button */}
+      <button
+        className="floating-category-btn"
+        onClick={() => setShowCategorySelector((v) => !v)}
+        aria-label="Select Category"
+      >
+        <Menu size={32} />
+      </button>
+      {showCategorySelector && (
+        <div className="floating-category-list">
+          {Object.keys(displayData || {}).map((category) => (
+            <button
+              key={category}
+              className="category-list-btn"
+              onClick={() => scrollToCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      )}
       <header className="header">
         <div className="container">
           <div className="header-content">
@@ -266,7 +298,11 @@ function HotelMenu() {
           ) : (
             <div className="menu-grid">
               {Object.entries(displayData).map(([category, items]) => (
-                <div key={category} className="category-card">
+                <div
+                  key={category}
+                  className="category-card"
+                  ref={el => (categoryRefs.current[category] = el)}
+                >
                   <div 
                     className="category-header"
                     onClick={() => toggleCategory(category)}
