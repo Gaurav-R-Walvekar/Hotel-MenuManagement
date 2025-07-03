@@ -17,22 +17,23 @@ function HotelMenu() {
   const [showCategorySelector, setShowCategorySelector] = useState(false);
   const categoryRefs = useRef({});
   const [hotelInfo, setHotelInfo] = useState(null);
+  const [language, setLanguage] = useState('english');
 
   useEffect(() => {
     fetchHotelInfo();
   }, [hotelName]);
 
   useEffect(() => {
-    if (hotelData) {
+    if (hotelData && hotelData[language]) {
       applyFilters();
     }
-  }, [hotelData]);
+  }, [hotelData, language]);
 
   useEffect(() => {
-    if (hotelData) {
+    if (hotelData && hotelData[language]) {
       applyFilters();
     }
-  }, [searchTerm, vegFilter]);
+  }, [searchTerm, vegFilter, language]);
 
   const fetchHotelInfo = async () => {
     try {
@@ -44,10 +45,11 @@ function HotelMenu() {
       }
       setHotelInfo(response.data);
       setHotelData(response.data.menu);
-      // Initialize all categories as expanded
+      // Initialize all categories as expanded for the default language
       const initialCollapsedState = {};
-      if (response.data.menu && typeof response.data.menu === 'object') {
-        Object.keys(response.data.menu).forEach(category => {
+      const defaultLangMenu = response.data.menu['english'] || Object.values(response.data.menu)[0];
+      if (defaultLangMenu && typeof defaultLangMenu === 'object') {
+        Object.keys(defaultLangMenu).forEach(category => {
           initialCollapsedState[category] = false;
         });
       }
@@ -60,20 +62,14 @@ function HotelMenu() {
   };
 
   const applyFilters = () => {
-    if (!hotelData) return;
-
-    console.log('Applying filters with hotelData:', hotelData);
-    console.log('Search term:', searchTerm);
-    console.log('Veg filter:', vegFilter);
-
-    let filtered = { ...hotelData };
-
+    if (!hotelData || !hotelData[language]) return;
+    const langMenu = hotelData[language];
+    let filtered = { ...langMenu };
     // Apply search filter
     if (searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase();
       filtered = {};
-      
-      Object.entries(hotelData).forEach(([category, items]) => {
+      Object.entries(langMenu).forEach(([category, items]) => {
         const filteredItems = {};
         Object.entries(items).forEach(([itemName, price]) => {
           if (itemName.toLowerCase().includes(searchLower)) {
@@ -85,11 +81,9 @@ function HotelMenu() {
         }
       });
     }
-
     // Apply veg/non-veg filter
     if (vegFilter !== 'all') {
       const vegFiltered = {};
-      
       Object.entries(filtered).forEach(([category, items]) => {
         const filteredItems = {};
         Object.entries(items).forEach(([itemName, price]) => {
@@ -102,11 +96,8 @@ function HotelMenu() {
           vegFiltered[category] = filteredItems;
         }
       });
-      
       filtered = vegFiltered;
     }
-
-    console.log('Final filtered data:', filtered);
     setFilteredData(filtered);
   };
 
@@ -119,6 +110,12 @@ function HotelMenu() {
       'chicken', 'mutton', 'beef', 'pork', 'fish', 'shrimp', 'prawn', 'crab', 'lobster',
       'egg', 'meat', 'lamb', 'duck', 'turkey', 'bacon', 'sausage', 'ham', 'salmon',
       'tuna', 'cod', 'tilapia', 'shark', 'squid', 'octopus', 'clam', 'oyster', 'mussel'
+    ,'चिकन', 'मटन', 'बीफ', 'सुअर का मांस', 'मछली', 'झींगा', 'झींगा', 'केकड़ा', 'झींगा लॉब्स्टर',
+     'अंडा', 'मांस', 'मेमने का मांस', 'बत्तख', 'टर्की', 'बेकन', 'सॉसेज', 'हैम', 'सालमन मछली', 'टूना मछली',
+      'कॉड मछली', 'तिलापिया मछली', 'शार्क मछली', 'स्क्विड', 'ऑक्टोपस', 'क्लैम', 'ऑइस्टर', 'मसल',
+      'चिकन', 'मटण', 'बीफ', 'डुकराचे मांस', 'मासे', 'झिंगा', 'कोळंबी', 'खेकडा', 'लॉब्स्टर', 'अंडे',
+       'मांस', 'मेंढीचे मांस', 'बदक', 'टर्की', 'बेकन', 'सॉसेज', 'हैम', 'सॅल्मन मासा', 'टूना मासा', 'कॉड मासा',
+        'तिलापिया मासा', 'सायट मासा', 'शिंगा', 'ऑक्टोपस', 'शिंपले', 'ऑयस्टर', 'शेवंडी'
     ];
     
     // Check if item name contains non-veg keywords
@@ -166,6 +163,17 @@ function HotelMenu() {
     }
   };
 
+  // When language changes, reset collapsed categories for new language
+  useEffect(() => {
+    if (hotelData && hotelData[language]) {
+      const newCollapsed = {};
+      Object.keys(hotelData[language]).forEach(category => {
+        newCollapsed[category] = false;
+      });
+      setCollapsedCategories(newCollapsed);
+    }
+  }, [language, hotelData]);
+
   if (loading) {
     return (
       <div className="container">
@@ -190,7 +198,7 @@ function HotelMenu() {
     );
   }
 
-  const displayData = filteredData || hotelData;
+  const displayData = filteredData || (hotelData && hotelData[language]);
   const hasActiveFilters = searchTerm.trim() || vegFilter !== 'all';
 
   console.log('Display data:', displayData);
@@ -247,7 +255,6 @@ function HotelMenu() {
               className="search-input"
             />
           </div>
-          
           <div className="filter-controls">
             <div className="veg-filter">
               <Filter className="filter-icon" />
@@ -261,7 +268,18 @@ function HotelMenu() {
                 <option value="non-veg">🔴 Non-Vegetarian Only</option>
               </select>
             </div>
-            
+            {/* Language Dropdown in filter section */}
+            <div className="language-dropdown-container">
+              <select
+                className="language-dropdown"
+                value={language}
+                onChange={e => setLanguage(e.target.value)}
+              >
+                <option value="english">English</option>
+                <option value="hindi">हिंदी</option>
+                <option value="marathi">मराठी</option>
+              </select>
+            </div>
             {hasActiveFilters && (
               <button 
                 className="btn btn-secondary clear-filters"

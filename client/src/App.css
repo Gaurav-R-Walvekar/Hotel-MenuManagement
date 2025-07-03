@@ -1243,4 +1243,28 @@ main {
     font-size: 0.95rem;
     padding: 0.4rem 0.7rem;
   }
+}
+
+.language-dropdown-container {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.language-dropdown {
+  min-width: 160px;
+  font-size: 1.15rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--accent-blue, #667eea);
+  background: var(--bg-tertiary, #fff);
+  color: var(--text-primary, #222);
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.08);
+  margin-right: 0.5rem;
+}
+
+.language-dropdown:focus {
+  border-color: var(--accent-yellow, #ffd166);
+  outline: none;
 } 
