@@ -898,9 +898,9 @@ main {
 .item-name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-primary);
   margin: 0;
-  line-height: 1.4;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .item-price {
@@ -1267,4 +1267,11 @@ main {
 .language-dropdown:focus {
   border-color: var(--accent-yellow, #ffd166);
   outline: none;
+}
+
+@media (max-width: 600px) {
+  .item-name {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
 } 

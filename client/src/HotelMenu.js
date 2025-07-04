@@ -342,7 +342,7 @@ function HotelMenu() {
                             {getVegIcon(itemName, category)}
                             <div className="item-details">
                               <h4 className="item-name">{displayName}</h4>
-                              <span className="item-category" style={{ display: 'inline-block', width: '220px', wordBreak: 'break-word', whiteSpace: 'normal', verticalAlign: 'top' }}>{itemCategoryValue}</span>
+                              <span className="item-category" style={{ display: 'inline-block', width: '185px', wordBreak: 'break-word', whiteSpace: 'normal', verticalAlign: 'top' }}>{itemCategoryValue}</span>
                             </div>
                           </div>
                           <div className="item-price">₹{price}</div>
