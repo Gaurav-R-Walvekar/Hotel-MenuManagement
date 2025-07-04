@@ -109,13 +109,11 @@ function HotelMenu() {
     const nonVegKeywords = [
       'chicken', 'mutton', 'beef', 'pork', 'fish', 'shrimp', 'prawn', 'crab', 'lobster',
       'egg', 'meat', 'lamb', 'duck', 'turkey', 'bacon', 'sausage', 'ham', 'salmon',
-      'tuna', 'cod', 'tilapia', 'shark', 'squid', 'octopus', 'clam', 'oyster', 'mussel'
-    ,'चिकन', 'मटन', 'बीफ', 'सुअर का मांस', 'मछली', 'झींगा', 'झींगा', 'केकड़ा', 'झींगा लॉब्स्टर',
-     'अंडा', 'मांस', 'मेमने का मांस', 'बत्तख', 'टर्की', 'बेकन', 'सॉसेज', 'हैम', 'सालमन मछली', 'टूना मछली',
+      'tuna', 'cod', 'tilapia', 'shark', 'squid', 'octopus', 'clam', 'oyster', 'mussel',
+      'चिकन', 'मटन', 'बीफ', 'सुअर का मांस', 'मछली', 'झींगा', 'झींगा', 'केकड़ा', 'झींगा लॉब्स्टर',
+      'अंडा', 'मांस', 'मेमने का मांस', 'बत्तख', 'टर्की', 'बेकन', 'सॉसेज', 'हैम', 'सालमन मछली', 'टूना मछली',
       'कॉड मछली', 'तिलापिया मछली', 'शार्क मछली', 'स्क्विड', 'ऑक्टोपस', 'क्लैम', 'ऑइस्टर', 'मसल',
-      'चिकन', 'मटण', 'बीफ', 'डुकराचे मांस', 'मासे', 'झिंगा', 'कोळंबी', 'खेकडा', 'लॉब्स्टर', 'अंडे',
-       'मांस', 'मेंढीचे मांस', 'बदक', 'टर्की', 'बेकन', 'सॉसेज', 'हैम', 'सॅल्मन मासा', 'टूना मासा', 'कॉड मासा',
-        'तिलापिया मासा', 'सायट मासा', 'शिंगा', 'ऑक्टोपस', 'शिंपले', 'ऑयस्टर', 'शेवंडी'
+      'चिकन', 'मटण', 'बीफ', 'डुकराचे मांस', 'मासे', 'झिंगा', 'कोळंबी', 'खेकडा', 'लॉब्स्टर', 'अंडे'
     ];
     
     // Check if item name contains non-veg keywords
@@ -330,18 +328,27 @@ function HotelMenu() {
                     </div>
                   </div>
                   <div className={`items-list ${collapsedCategories[category] ? 'collapsed' : ''}`}>
-                    {Object.entries(items).map(([itemName, price]) => (
-                      <div key={itemName} className="menu-item">
-                        <div className="item-info">
-                          {getVegIcon(itemName, category)}
-                          <div className="item-details">
-                            <h4 className="item-name">{itemName}</h4>
-                            <span className="item-category">{category}</span>
+                    {Object.entries(items).map(([itemName, price]) => {
+                      let displayName = itemName;
+                      let itemCategoryValue = category;
+                      if (itemName.includes('!')) {
+                        const [before, after] = itemName.split('!');
+                        displayName = before;
+                        itemCategoryValue = after;
+                      }
+                      return (
+                        <div key={itemName} className="menu-item">
+                          <div className="item-info">
+                            {getVegIcon(itemName, category)}
+                            <div className="item-details">
+                              <h4 className="item-name">{displayName}</h4>
+                              <span className="item-category" style={{ display: 'inline-block', width: '220px', wordBreak: 'break-word', whiteSpace: 'normal', verticalAlign: 'top' }}>{itemCategoryValue}</span>
+                            </div>
                           </div>
+                          <div className="item-price">₹{price}</div>
                         </div>
-                        <div className="item-price">₹{price}</div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}
