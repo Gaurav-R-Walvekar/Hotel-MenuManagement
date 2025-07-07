@@ -2,7 +2,7 @@ require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
 // MongoDB connection string from environment variable
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://gaurav2851997:yTNk3K86fnWChvwd@hotelmanagement.eork9td.mongodb.net/?retryWrites=true&w=majority&appName=HotelManagement';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://gaurav2851997:YOUR_PASSWORD@hotelmanagement.eork9td.mongodb.net/?retryWrites=true&w=majority&appName=HotelManagement';
 
 // Database name from environment variable
 const DB_NAME = process.env.DB_NAME || 'hotelmanagement';
