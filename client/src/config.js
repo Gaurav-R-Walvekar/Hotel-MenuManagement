@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://hotel-menumanagement.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://hotelserver.aisoft.it.com:5000'; //'https://hotel-menumanagement.onrender.com';
 
 export const config = {
   API_BASE_URL,
