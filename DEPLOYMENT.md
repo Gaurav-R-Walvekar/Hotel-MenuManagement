@@ -108,7 +108,7 @@ nano .env
 ### Configure your .env file:
 ```env
 # MongoDB Connection Configuration
-MONGODB_URI=mongodb+srv://username:password@your-cluster.mongodb.net/?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://gaurav2851997:yTNk3K86fnWChvwd@hotelmanagement.eork9td.mongodb.net/?retryWrites=true&w=majority&appName=HotelManagement
 DB_NAME=hotelmanagement
 PORT=5000
 NODE_ENV=production
