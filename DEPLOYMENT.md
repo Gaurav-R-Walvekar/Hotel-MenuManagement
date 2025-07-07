@@ -169,7 +169,7 @@ nano /etc/nginx/sites-available/hotel-menu-api
 ```nginx
 server {
     listen 80;
-    server_name YOUR_DOMAIN_OR_IP;
+    server_name hotelserver.aisoft.it.com;
 
     location / {
         proxy_pass http://localhost:5000;
