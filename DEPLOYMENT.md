@@ -1,212 +1,324 @@
-# Deploying Hotel Menu Management Backend on Render
+# Deployment Guide: Node.js Backend to Hetzner Ubuntu Server
 
-This guide will help you deploy your Hotel Menu Management backend on Render.
+This guide will walk you through deploying your Hotel Menu Management backend to a new Hetzner Ubuntu server.
 
 ## Prerequisites
 
-1. **GitHub Repository**: Your code should be in a GitHub repository
-2. **Render Account**: Sign up at [render.com](https://render.com)
-3. **MongoDB Atlas**: Your database should be set up on MongoDB Atlas
+- A Hetzner Cloud account
+- SSH access to your server
+- MongoDB Atlas account (or local MongoDB)
+- Domain name (optional, for production)
 
-## Step 1: Prepare Your Repository
+## Step 1: Create Hetzner Server
 
-### 1.1 Update Environment Variables
-Make sure your `.env` file is not committed to Git (it should be in `.gitignore`).
+1. **Create a new Cloud Server in Hetzner:**
+   - Choose Ubuntu 22.04 LTS
+   - Select appropriate server size (CX11 or higher recommended)
+   - Choose a datacenter location close to your users
+   - Add your SSH key or create a password
+   - Note down your server's IP address
 
-### 1.2 Build the Frontend
-Before deploying, build your React frontend:
+## Step 2: Initial Server Setup
 
+### Connect to your server:
 ```bash
-cd client
+ssh root@YOUR_SERVER_IP
+```
+
+### Update system packages:
+```bash
+apt update && apt upgrade -y
+```
+
+### Install essential packages:
+```bash
+apt install -y curl wget git ufw fail2ban
+```
+
+### Create a non-root user (recommended):
+```bash
+adduser deploy
+usermod -aG sudo deploy
+```
+
+## Step 3: Install Node.js and PM2
+
+### Install Node.js 18.x (LTS):
+```bash
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+apt-get install -y nodejs
+```
+
+### Verify installation:
+```bash
+node --version
+npm --version
+```
+
+### Install PM2 globally:
+```bash
+npm install -g pm2
+```
+
+### Install PM2 startup script:
+```bash
+pm2 startup
+```
+
+## Step 4: Install and Configure Nginx
+
+### Install Nginx:
+```bash
+apt install -y nginx
+```
+
+### Start and enable Nginx:
+```bash
+systemctl start nginx
+systemctl enable nginx
+```
+
+### Configure firewall:
+```bash
+ufw allow 'Nginx Full'
+ufw allow OpenSSH
+ufw enable
+```
+
+## Step 5: Deploy Your Application
+
+### Clone your repository:
+```bash
+cd /var/www
+git clone https://github.com/YOUR_USERNAME/Hotel-MenuManagement.git
+cd Hotel-MenuManagement
+```
+
+### Install dependencies:
+```bash
 npm install
-npm run build
-cd ..
 ```
 
-### 1.3 Commit and Push
+### Create environment file:
 ```bash
-git add .
-git commit -m "Prepare for Render deployment"
-git push origin main
+cp env.template .env
+nano .env
 ```
 
-## Step 2: Deploy on Render
+### Configure your .env file:
+```env
+# MongoDB Connection Configuration
+MONGODB_URI=mongodb+srv://username:password@your-cluster.mongodb.net/?retryWrites=true&w=majority
+DB_NAME=hotelmanagement
+PORT=5000
+NODE_ENV=production
+```
 
-### 2.1 Create a New Web Service
+### Build the client (if you have a React frontend):
+```bash
+npm run build
+```
 
-1. Go to [render.com](https://render.com) and sign in
-2. Click "New +" and select "Web Service"
-3. Connect your GitHub repository
-4. Select the repository containing your code
+## Step 6: Configure PM2
 
-### 2.2 Configure the Service
+### Create PM2 ecosystem file:
+```bash
+nano ecosystem.config.js
+```
 
-**Basic Settings:**
-- **Name**: `hotel-menu-management-backend`
-- **Environment**: `Node`
-- **Region**: Choose closest to your users
-- **Branch**: `main` (or your default branch)
-- **Root Directory**: Leave empty (if your code is in the root)
-
-**Build & Deploy Settings:**
-- **Build Command**: `npm install && cd client && npm install && npm run build && cd ..`
-- **Start Command**: `npm start`
-
-### 2.3 Environment Variables
-
-Add these environment variables in Render:
-
-| Key | Value | Description |
-|-----|-------|-------------|
-| `NODE_ENV` | `production` | Production environment |
-| `MONGO_URI` | `your_mongodb_atlas_connection_string` | Your MongoDB Atlas connection string |
-| `PORT` | `10000` | Port for Render (will be overridden by Render) |
-
-**Important**: Replace `your_mongodb_atlas_connection_string` with your actual MongoDB Atlas connection string.
-
-### 2.4 Advanced Settings
-
-- **Auto-Deploy**: Enable (recommended)
-- **Health Check Path**: `/health`
-
-## Step 3: Update Frontend Configuration
-
-After deployment, update your frontend configuration to use the new API URL:
-
-### 3.1 Update config.js
-
+### Add the following configuration:
 ```javascript
-// client/src/config.js
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://your-app-name.onrender.com';
-
-export const config = {
-  API_BASE_URL,
+module.exports = {
+  apps: [{
+    name: 'hotel-menu-api',
+    script: 'server.js',
+    instances: 'max',
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    env_file: '.env',
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
 };
-
-export default config;
 ```
 
-### 3.2 Rebuild and Deploy Frontend
-
-If you want to deploy the frontend separately:
-
+### Create logs directory:
 ```bash
-cd client
-npm run build
+mkdir logs
 ```
 
-## Step 4: Test Your Deployment
+### Start the application with PM2:
+```bash
+pm2 start ecosystem.config.js
+pm2 save
+```
 
-### 4.1 Health Check
-Visit: `https://your-app-name.onrender.com/health`
+## Step 7: Configure Nginx as Reverse Proxy
 
-Should return: `{"status":"OK","message":"Server is running"}`
+### Create Nginx configuration:
+```bash
+nano /etc/nginx/sites-available/hotel-menu-api
+```
 
-### 4.2 API Endpoints
-Test your API endpoints:
+### Add the following configuration:
+```nginx
+server {
+    listen 80;
+    server_name YOUR_DOMAIN_OR_IP;
 
-- `https://your-app-name.onrender.com/api/menu`
-- `https://your-app-name.onrender.com/api/menu/Grand_Palace_Hotel`
-- `https://your-app-name.onrender.com/api/hotels`
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
 
-### 4.3 Frontend
-Visit: `https://your-app-name.onrender.com`
+    # Increase upload size if needed
+    client_max_body_size 10M;
+}
+```
+
+### Enable the site:
+```bash
+ln -s /etc/nginx/sites-available/hotel-menu-api /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+nginx -t
+systemctl reload nginx
+```
+
+## Step 8: SSL Certificate (Optional but Recommended)
+
+### Install Certbot:
+```bash
+apt install -y certbot python3-certbot-nginx
+```
+
+### Get SSL certificate:
+```bash
+certbot --nginx -d YOUR_DOMAIN
+```
+
+## Step 9: Monitoring and Maintenance
+
+### Check application status:
+```bash
+pm2 status
+pm2 logs
+```
+
+### Monitor system resources:
+```bash
+htop
+df -h
+```
+
+### Set up automatic PM2 restart on server reboot:
+```bash
+pm2 startup
+pm2 save
+```
+
+## Step 10: Database Setup
+
+### If using MongoDB Atlas:
+1. Create a MongoDB Atlas cluster
+2. Get your connection string
+3. Update your .env file with the connection string
+4. Ensure your server's IP is whitelisted in MongoDB Atlas
+
+### If using local MongoDB:
+```bash
+# Install MongoDB
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+apt update
+apt install -y mongodb-org
+systemctl start mongod
+systemctl enable mongod
+```
 
 ## Troubleshooting
 
-### Common Issues
+### Check application logs:
+```bash
+pm2 logs hotel-menu-api
+tail -f logs/combined.log
+```
 
-1. **Build Fails**
-   - Check the build logs in Render
-   - Ensure all dependencies are in `package.json`
-   - Verify the build command is correct
+### Check Nginx logs:
+```bash
+tail -f /var/log/nginx/error.log
+tail -f /var/log/nginx/access.log
+```
 
-2. **MongoDB Connection Fails**
-   - Verify your MongoDB Atlas connection string
-   - Check if your IP is whitelisted in MongoDB Atlas
-   - Ensure the database and collection exist
+### Restart services:
+```bash
+pm2 restart hotel-menu-api
+systemctl restart nginx
+```
 
-3. **Environment Variables Not Set**
-   - Double-check all environment variables in Render dashboard
-   - Ensure variable names match exactly
-
-4. **Port Issues**
-   - Render automatically sets the PORT environment variable
-   - Don't hardcode port numbers in production
-
-### Logs and Debugging
-
-- Check Render logs in the dashboard
-- Use the health check endpoint to verify server status
-- Monitor MongoDB Atlas for connection issues
+### Check if ports are open:
+```bash
+netstat -tlnp
+```
 
 ## Security Considerations
 
-1. **Environment Variables**: Never commit sensitive data to Git
-2. **CORS**: Configure CORS properly for production
-3. **MongoDB**: Use connection string with proper authentication
-4. **HTTPS**: Render provides HTTPS by default
+1. **Keep system updated:**
+   ```bash
+   apt update && apt upgrade -y
+   ```
 
-## Cost Optimization
+2. **Configure fail2ban:**
+   ```bash
+   systemctl enable fail2ban
+   systemctl start fail2ban
+   ```
 
-- Use the free tier for development/testing
-- Monitor usage to avoid unexpected charges
-- Consider upgrading only when needed
+3. **Regular backups:**
+   - Set up automated backups for your database
+   - Backup your application code and configuration
+
+4. **Monitor logs:**
+   - Set up log monitoring
+   - Configure alerts for critical errors
+
+## Performance Optimization
+
+1. **Enable Nginx caching:**
+   - Configure static file caching
+   - Enable gzip compression
+
+2. **Database optimization:**
+   - Add proper indexes
+   - Monitor query performance
+
+3. **PM2 clustering:**
+   - Already configured in ecosystem.config.js
+   - Adjust instances based on server resources
+
+## Deployment Script
+
+You can also use the provided deployment script:
+```bash
+chmod +x deployment/deploy.sh
+./deployment/deploy.sh
+```
 
 ## Support
 
-- Render Documentation: [docs.render.com](https://docs.render.com)
-- MongoDB Atlas Documentation: [docs.atlas.mongodb.com](https://docs.atlas.mongodb.com)
-- GitHub Issues: For code-specific problems
-
-## Render Deployment
-
-### Fixed Issues
-- **ENOENT Error**: The "no such file or directory, stat '/opt/render/project/src/client/build/index.html'" error has been fixed by updating the build process.
-
-### Updated Configuration
-The `render.yaml` file now includes the proper build commands:
-```yaml
-buildCommand: npm run deploy
-```
-
-This ensures that:
-1. Server dependencies are installed (`npm install`)
-2. Client dependencies are installed (`npm run install-client`)
-3. React client is built (`npm run build`)
-
-### Deployment Steps
-1. Push your code to GitHub
-2. Connect your repository to Render
-3. Render will automatically use the `render.yaml` configuration
-4. The build process will create the necessary client build files
-5. The server will serve the React app correctly
-
-### Troubleshooting
-
-#### If you still get build errors:
-1. Check that your MongoDB connection string is set in Render environment variables
-2. Ensure all environment variables are configured:
-   - `MONGO_URI` or `MONGODB_URI`
-   - `NODE_ENV=production`
-   - `PORT=10000`
-
-#### If the client build fails:
-1. Test locally first: `npm run deploy`
-2. Check that all client dependencies are in `client/package.json`
-3. Ensure the client can build locally: `cd client && npm run build`
-
-#### Manual Deployment (if needed):
-If Render's automatic deployment fails, you can:
-1. Build locally: `npm run deploy`
-2. Commit the `client/build` directory to your repository
-3. Deploy again
-
-### Local Testing
-Before deploying, test the production build locally:
-```bash
-npm run deploy
-NODE_ENV=production npm start
-```
-
-This will simulate the production environment and help catch issues before deployment. 
+If you encounter issues:
+1. Check the logs using the commands above
+2. Verify your environment variables
+3. Ensure MongoDB connection is working
+4. Check firewall and security group settings 
