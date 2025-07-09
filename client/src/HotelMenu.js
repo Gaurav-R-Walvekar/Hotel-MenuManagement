@@ -356,12 +356,6 @@ function HotelMenu() {
           )}
         </div>
       </main>
-
-      <footer className="footer">
-        <div className="container">
-          <p>&copy; 2024 Hotel Menu Management. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
