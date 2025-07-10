@@ -32,6 +32,7 @@ if (process.env.NODE_ENV !== 'production') {
   mongoose.set('debug', false);
 }
 
+
 mongoose.connect(mongoUri, {
   dbName: 'HotelManagement' // Explicitly specify the database name
 })
@@ -68,7 +69,7 @@ app.get('/api/menu', async (req, res) => {
 app.get('/api/menu/:hotelName', async (req, res) => {
   try {
     const hotelName = req.params.hotelName;
-    const hotel = await Hotel.findOne({ name: hotelName });
+    const hotel = await Hotel.findOne({ name: { $regex: `^${hotelName}$`, $options: 'i' } });
     console.log('Fetching menu for hotel:', hotelName);
     if (hotel) {
       res.json(hotel.menu);
@@ -95,7 +96,7 @@ app.get('/api/hotels', async (req, res) => {
 app.get('/api/hotel-info/:hotelName', async (req, res) => {
   try {
     const hotelName = req.params.hotelName;
-    const hotel = await Hotel.findOne({ name: hotelName });
+    const hotel = await Hotel.findOne({ name: { $regex: `^${hotelName}$`, $options: 'i' } });
     
     if (hotel) {
       const hotelInfo = {
