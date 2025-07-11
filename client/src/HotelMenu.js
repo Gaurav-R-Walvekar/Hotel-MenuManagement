@@ -18,6 +18,8 @@ function HotelMenu() {
   const categoryRefs = useRef({});
   const [hotelInfo, setHotelInfo] = useState(null);
   const [language, setLanguage] = useState('english');
+  const [underMaintenance, setUnderMaintenance] = useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = useState('');
 
   useEffect(() => {
     fetchHotelInfo();
@@ -45,6 +47,14 @@ function HotelMenu() {
       }
       setHotelInfo(response.data);
       setHotelData(response.data.menu);
+      
+      // Check for maintenance status
+      if (response.data.under_maintenance) {
+        setUnderMaintenance(true);
+        setMaintenanceMessage(response.data.maintenance_message || 'Site is under maintenance. Please contact the administrator.');
+        return;
+      }
+      
       // Initialize all categories as expanded for the default language
       const initialCollapsedState = {};
       const defaultLangMenu = response.data.menu['english'] || Object.values(response.data.menu)[0];
@@ -187,11 +197,49 @@ function HotelMenu() {
     return (
       <div className="container">
         <div className="error">
-          <p>{error}</p>
-          <button className="btn btn-primary" onClick={() => navigate('/')}>
+          <p>Error while loading menu. Please Contact Administrator</p>
+          { <button className="btn btn-primary" onClick={() => navigate('/')}>
             Go to Home
-          </button>
+          </button> }
         </div>
+      </div>
+    );
+  }
+
+  if (underMaintenance) {
+    return (
+      <div className="App">
+        <header className="header">
+          <div className="container">
+            <div className="header-content">
+              <div className="hotel-info">
+                <h1>
+                  <Hotel className="header-icon" />
+                  {hotelName}
+                </h1>
+                <p>{hotelInfo && hotelInfo.location ? hotelInfo.location : ''}</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="container">
+          <div className="maintenance-page">
+            <div className="maintenance-content">
+              <div className="maintenance-icon">🔧</div>
+              <h2>Site Under Maintenance</h2>
+              <p className="maintenance-message">{maintenanceMessage}</p>
+              <div className="maintenance-details">
+                <p><strong>Hotel:</strong> {hotelName}</p>
+                <p><strong>Location:</strong> {hotelInfo && hotelInfo.location ? hotelInfo.location : 'N/A'}</p>
+                <p><strong>Expiration Date:</strong> {hotelInfo && hotelInfo.expiration_date ? new Date(hotelInfo.expiration_date).toLocaleDateString() : 'N/A'}</p>
+              </div>
+              {/* <button className="btn btn-primary" onClick={() => navigate('/')}>
+                Go to Home
+              </button> */}
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
